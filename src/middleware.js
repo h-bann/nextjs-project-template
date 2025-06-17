@@ -1,10 +1,18 @@
 import { NextResponse } from "next/server";
-import { verifyToken } from "@/lib/auth";
+import jwt from "jsonwebtoken";
 
-const protectedRoutes = ["/dashboard"];
+function verifyToken(token) {
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET);
+  } catch {
+    return null;
+  }
+}
+
+const protectedRoutes = ["/dashboard", "/profile"];
 const authRoutes = ["/auth/login", "/auth/register"];
 
-export default function middleware(request) {
+export function middleware(request) {
   const token = request.cookies.get("auth-token")?.value;
   const { pathname } = request.nextUrl;
 

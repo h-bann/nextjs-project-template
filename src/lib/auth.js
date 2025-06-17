@@ -1,22 +1,22 @@
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const { cookies } = require("next/headers");
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import { cookies } from "next/headers";
 
-async function hashPassword(password) {
+export async function hashPassword(password) {
   return bcrypt.hash(password, 12);
 }
 
-async function verifyPassword(password, hashedPassword) {
+export async function verifyPassword(password, hashedPassword) {
   return bcrypt.compare(password, hashedPassword);
 }
 
-function generateToken(payload) {
+export function generateToken(payload) {
   return jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || "7d",
   });
 }
 
-function verifyToken(token) {
+export function verifyToken(token) {
   try {
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch {
@@ -24,8 +24,8 @@ function verifyToken(token) {
   }
 }
 
-async function getAuthUser() {
-  const cookieStore = cookies();
+export async function getAuthUser() {
+  const cookieStore = await cookies();
   const token = cookieStore.get("auth-token")?.value;
 
   if (!token) return null;
@@ -33,8 +33,8 @@ async function getAuthUser() {
   return verifyToken(token);
 }
 
-function setAuthCookie(token) {
-  const cookieStore = cookies();
+export async function setAuthCookie(token) {
+  const cookieStore = await cookies();
   cookieStore.set("auth-token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -44,17 +44,7 @@ function setAuthCookie(token) {
   });
 }
 
-function clearAuthCookie() {
-  const cookieStore = cookies();
+export async function clearAuthCookie() {
+  const cookieStore = await cookies();
   cookieStore.delete("auth-token");
 }
-
-module.exports = {
-  hashPassword,
-  verifyPassword,
-  generateToken,
-  verifyToken,
-  getAuthUser,
-  setAuthCookie,
-  clearAuthCookie,
-};
