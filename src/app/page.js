@@ -72,7 +72,7 @@ export default async function HomePage() {
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <div className="text-purple-600 text-3xl mb-4">🎨</div>
+              <div className="text-purple-600 text-4xl mb-4">🎨</div>
               <h3 className="text-xl font-semibold mb-2">Beautiful UI</h3>
               <p className="text-gray-600">
                 Styled with Tailwind CSS and includes reusable components for
